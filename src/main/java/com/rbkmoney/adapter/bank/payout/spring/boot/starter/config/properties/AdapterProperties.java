@@ -18,7 +18,4 @@ public class AdapterProperties {
     @NotEmpty
     private String url;
 
-    @NotEmpty
-    private String tagPrefix;
-
 }

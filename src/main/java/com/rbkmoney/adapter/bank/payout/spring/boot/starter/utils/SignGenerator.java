@@ -7,6 +7,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
 
 public class SignGenerator {
 
@@ -14,19 +15,19 @@ public class SignGenerator {
         StringBuilder dataHmac = new StringBuilder();
         Arrays.asList(fields)
                 .forEach(field -> {
-                            if (params.get(field) != null
-                                    && !params.get(field).isEmpty()
-                                    && params.get(field).get(0) != null
-                                    && !params.get(field).get(0).isEmpty()
+                    List<String> fieldParameters = params.get(field);
+                    if (fieldParameters != null
+                            && !fieldParameters.isEmpty()
+                            && fieldParameters.get(0) != null
+                            && !fieldParameters.get(0).isEmpty()
                             ) {
-                                dataHmac.append(params.get(field).get(0).length());
-                                dataHmac.append(params.get(field).get(0));
+                        dataHmac.append(fieldParameters.get(0).length());
+                        dataHmac.append(fieldParameters.get(0));
                             } else {
                                 dataHmac.append("-");
                             }
                         }
                 );
-
         return dataHmac.toString();
     }
 
