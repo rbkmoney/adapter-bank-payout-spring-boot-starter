@@ -1,0 +1,8 @@
+[
+  {
+    "code":"unknown",
+    "description":"unknown",
+    "regexp":".*",
+    "mapping":"authorization_failed:unknown"
+  }
+]

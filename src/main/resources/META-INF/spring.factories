@@ -1,0 +1,7 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.ErrorMappingConfiguration,\
+com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.properties.TimerProperties,\
+com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.properties.AdapterProperties,\
+com.rbkmoney.adapter.bank.payout.spring.boot.starter.service.PayoutAdapterService,\
+com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.FilterConfiguration
+
