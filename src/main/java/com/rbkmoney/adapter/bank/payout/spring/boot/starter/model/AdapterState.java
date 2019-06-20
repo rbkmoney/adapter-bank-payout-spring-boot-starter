@@ -13,6 +13,6 @@ import java.time.Instant;
 @AllArgsConstructor
 public class AdapterState {
     private Step step;
-    private Instant maxDateTimePolling;
+    private Long maxTimePoolingMillis;
     private TransactionInfo trxInfo;
 }

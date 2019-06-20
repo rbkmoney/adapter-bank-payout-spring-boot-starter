@@ -31,15 +31,21 @@ public class IntentServiceImpl implements IntentService {
     }
 
     public Intent getSleep(ExitStateModel exitStateModel) {
-        if (exitStateModel.getNextState().getMaxDateTimePolling().getEpochSecond() < Instant.now().getEpochSecond()) {
+        if (exitStateModel.getNextState().getMaxTimePoolingMillis() == null) {
+            throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
+        }
+        if (exitStateModel.getNextState().getMaxTimePoolingMillis() < Instant.now().toEpochMilli()) {
+            final Failure failure = new Failure("Sleep timeout");
+            failure.setReason("Max time pool limit reached");
             return Intent.finish(new FinishIntent(FinishStatus.failure(new Failure())));
         }
+
         int timerPollingDelay = OptionsExtractors.extractPollingDelay(exitStateModel.getEntryStateModel().getOptions(), timerProperties.getPollingDelay());
         return Intent.sleep(new SleepIntent(new Timer(Timer.timeout(timerPollingDelay))));
     }
 
-    public Instant getMaxDateTimeInstant(EntryStateModel entryStateModel) {
+    public long getMaxDateTimeInstant(EntryStateModel entryStateModel) {
         int maxTimePolling = extractMaxTimePolling(entryStateModel.getOptions(), timerProperties.getMaxTimePolling());
-        return Instant.now().plus(maxTimePolling, ChronoUnit.MINUTES);
+        return Instant.now().plus(maxTimePolling, ChronoUnit.MINUTES).toEpochMilli();
     }
 }

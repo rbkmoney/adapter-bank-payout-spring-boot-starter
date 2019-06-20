@@ -27,7 +27,7 @@ public class PayoutAdapterService<T extends EntryStateModel, X extends ExitState
     private final WithdrawalToEntryStateConverter<T> withdrawalToEntryStateConverter;
     private final ExitStateToProcessResultConverter<X> exitStateToProcessResultConverter;
     private final List<CommonHandler<T, X>> handlers;
-    private final StepResolver resolver;
+    private final StepResolver<T, X> resolver;
     private final WithdrawalValidator validator;
 
     @Override
