@@ -8,5 +8,5 @@ public interface IntentService {
     Intent getFailure(ExitStateModel exitStateModel);
     Intent getSuccess(ExitStateModel exitStateModel);
     Intent getSleep(ExitStateModel exitStateModel);
-    long getMaxDateTimeInstant(EntryStateModel entryStateModel);
+    Long getMaxDateTimeInstant(EntryStateModel entryStateModel);
 }

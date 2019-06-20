@@ -44,7 +44,7 @@ public class IntentServiceImpl implements IntentService {
         return Intent.sleep(new SleepIntent(new Timer(Timer.timeout(timerPollingDelay))));
     }
 
-    public long getMaxDateTimeInstant(EntryStateModel entryStateModel) {
+    public Long getMaxDateTimeInstant(EntryStateModel entryStateModel) {
         int maxTimePolling = extractMaxTimePolling(entryStateModel.getOptions(), timerProperties.getMaxTimePolling());
         return Instant.now().plus(maxTimePolling, ChronoUnit.MINUTES).toEpochMilli();
     }
