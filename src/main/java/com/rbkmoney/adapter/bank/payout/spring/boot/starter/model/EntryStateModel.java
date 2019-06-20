@@ -1,7 +1,7 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.model;
 
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringExclude;
+import lombok.ToString;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ public class EntryStateModel {
     private String withdrawalId;
     private Long amount;
     private String currencyCode;
-    @ToStringExclude
+    @ToString.Exclude
     private String pan;
     private Map<String, String> options;
 
