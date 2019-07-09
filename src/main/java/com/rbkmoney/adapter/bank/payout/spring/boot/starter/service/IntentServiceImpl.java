@@ -44,7 +44,7 @@ public class IntentServiceImpl implements IntentService {
         if (exitStateModel.getNextState().getMaxTimePoolingMillis() < Instant.now().toEpochMilli()) {
             final Failure failure = new Failure("Sleep timeout");
             failure.setReason("Max time pool limit reached");
-            return Intent.finish(new FinishIntent(FinishStatus.failure(new Failure())));
+            return Intent.finish(new FinishIntent(FinishStatus.failure(failure)));
         }
 
         int timerPollingDelay = OptionsExtractors.extractPollingDelay(exitStateModel.getEntryStateModel().getOptions(), timerProperties.getPollingDelay());
