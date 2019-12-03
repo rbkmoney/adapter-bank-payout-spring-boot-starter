@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rbkmoney</groupId>
     <artifactId>adapter-bank-payout-spring-boot-starter</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
 
     <name>Adapter-bank-payout-spring-boot-starter</name>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>adapter-common-lib</artifactId>
-            <version>0.0.7-SNAPSHOT</version>
+            <version>0.0.12</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>

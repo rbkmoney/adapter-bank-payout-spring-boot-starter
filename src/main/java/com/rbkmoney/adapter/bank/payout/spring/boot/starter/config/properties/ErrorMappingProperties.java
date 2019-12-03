@@ -1,8 +1,6 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.properties;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rbkmoney.adapter.common.mapper.SimpleErrorMapping;
-import com.rbkmoney.adapter.common.mapper.SimpleObjectMapper;
 import com.rbkmoney.error.mapping.ErrorMapping;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +21,6 @@ public class ErrorMappingProperties {
 
     @Bean
     public ErrorMapping errorMapping() throws IOException {
-        return new SimpleErrorMapping(errorMappingFilePath, errorMappingPattern).getErrorMapping();
+        return new SimpleErrorMapping(errorMappingFilePath, errorMappingPattern).createErrorMapping();
     }
 }

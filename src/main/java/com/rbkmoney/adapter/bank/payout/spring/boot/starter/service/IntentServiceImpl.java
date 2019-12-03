@@ -3,10 +3,14 @@ package com.rbkmoney.adapter.bank.payout.spring.boot.starter.service;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.properties.TimerProperties;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.EntryStateModel;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.ExitStateModel;
-import com.rbkmoney.damsel.base.Timer;
+import com.rbkmoney.adapter.bank.payout.spring.boot.starter.state.backoff.BackOffUtils;
 import com.rbkmoney.damsel.domain.TransactionInfo;
-import com.rbkmoney.damsel.withdrawals.provider_adapter.*;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.FinishIntent;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.FinishStatus;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.Intent;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.Success;
 import com.rbkmoney.error.mapping.ErrorMapping;
+import com.rbkmoney.java.damsel.utils.creators.WithdrawalsProviderAdapterPackageCreators;
 import com.rbkmoney.java.damsel.utils.extractors.OptionsExtractors;
 import lombok.RequiredArgsConstructor;
 
@@ -37,21 +41,32 @@ public class IntentServiceImpl implements IntentService {
     }
 
     public Intent getSleep(ExitStateModel exitStateModel) {
-        if (exitStateModel.getNextState().getMaxTimePoolingMillis() == null) {
-            throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
-        }
-        if (exitStateModel.getNextState().getMaxTimePoolingMillis() < Instant.now().toEpochMilli()) {
-            String code = "Sleep timeout";
-            String reason = "Max time pool limit reached";
-            return Intent.finish(new FinishIntent(FinishStatus.failure(errorMapping.mapFailure(code, reason))));
-        }
+        int timerPollingDelay;
 
-        int timerPollingDelay = OptionsExtractors.extractPollingDelay(exitStateModel.getEntryStateModel().getOptions(), timerProperties.getPollingDelay());
-        return Intent.sleep(new SleepIntent(new Timer(Timer.timeout(timerPollingDelay))));
+        // TODO: need feedback
+        if (exitStateModel.getNextState().getStartDateTimePolling() == null) {
+            if (exitStateModel.getNextState().getMaxTimePoolingMillis() == null) {
+                throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
+            }
+            if (exitStateModel.getNextState().getMaxTimePoolingMillis() < Instant.now().toEpochMilli()) {
+                String code = "Sleep timeout";
+                String reason = "Max time pool limit reached";
+                return Intent.finish(new FinishIntent(FinishStatus.failure(errorMapping.mapFailure(code, reason))));
+            }
+            timerPollingDelay = OptionsExtractors.extractPollingDelay(exitStateModel.getEntryStateModel().getOptions(), timerProperties.getPollingDelay());
+        } else {
+            timerPollingDelay = BackOffUtils.prepareNextPollingInterval(exitStateModel.getNextState(), exitStateModel.getEntryStateModel().getOptions());
+        }
+        return WithdrawalsProviderAdapterPackageCreators.createIntentWithSleepIntent(timerPollingDelay);
     }
 
     public Long getMaxDateTimeInstant(EntryStateModel entryStateModel) {
         int maxTimePolling = extractMaxTimePolling(entryStateModel.getOptions(), timerProperties.getMaxTimePolling());
         return Instant.now().plus(maxTimePolling, ChronoUnit.MINUTES).toEpochMilli();
+    }
+
+    public Instant extractMaxDateTimeInstant(EntryStateModel entryStateModel) {
+        int maxTimePolling = extractMaxTimePolling(entryStateModel.getOptions(), timerProperties.getMaxTimePolling());
+        return Instant.now().plus(maxTimePolling, ChronoUnit.MINUTES);
     }
 }
