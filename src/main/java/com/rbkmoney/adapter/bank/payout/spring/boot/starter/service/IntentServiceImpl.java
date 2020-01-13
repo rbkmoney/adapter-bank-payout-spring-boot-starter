@@ -1,9 +1,10 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.service;
 
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.properties.TimerProperties;
+import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.AdapterState;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.EntryStateModel;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.ExitStateModel;
-import com.rbkmoney.adapter.bank.payout.spring.boot.starter.state.backoff.BackOffUtils;
+import com.rbkmoney.adapter.common.utils.times.ExponentialBackOffPollingService;
 import com.rbkmoney.damsel.domain.TransactionInfo;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.FinishIntent;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.FinishStatus;
@@ -55,7 +56,8 @@ public class IntentServiceImpl implements IntentService {
             }
             timerPollingDelay = OptionsExtractors.extractPollingDelay(exitStateModel.getEntryStateModel().getOptions(), timerProperties.getPollingDelay());
         } else {
-            timerPollingDelay = BackOffUtils.prepareNextPollingInterval(exitStateModel.getNextState(), exitStateModel.getEntryStateModel().getOptions());
+            ExponentialBackOffPollingService<AdapterState> pollingService = new ExponentialBackOffPollingService<>();
+            timerPollingDelay = pollingService.prepareNextPollingInterval(exitStateModel.getNextState(), exitStateModel.getEntryStateModel().getOptions());
         }
         return WithdrawalsProviderAdapterPackageCreators.createIntentWithSleepIntent(timerPollingDelay);
     }

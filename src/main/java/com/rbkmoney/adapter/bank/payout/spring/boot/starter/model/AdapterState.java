@@ -1,6 +1,6 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rbkmoney.adapter.common.model.PollingInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,14 +12,12 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdapterState {
+public class AdapterState extends PollingInfo {
+
     private Step step;
     // TODO: backward compatibility
     private Long maxTimePoolingMillis;
 
-    @JsonProperty(value = "start_date_time_polling")
-    private Instant startDateTimePolling;
-    @JsonProperty(value = "max_date_time_polling")
     private Instant maxDateTimePolling;
 
     private TransactionInfo trxInfo;
