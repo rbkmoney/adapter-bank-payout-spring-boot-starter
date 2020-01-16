@@ -1,9 +1,9 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.service;
 
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.properties.TimerProperties;
-import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.AdapterState;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.EntryStateModel;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.ExitStateModel;
+import com.rbkmoney.adapter.common.model.PollingInfo;
 import com.rbkmoney.adapter.common.utils.times.ExponentialBackOffPollingService;
 import com.rbkmoney.damsel.domain.TransactionInfo;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.FinishIntent;
@@ -45,19 +45,22 @@ public class IntentServiceImpl implements IntentService {
         int timerPollingDelay;
 
         // TODO: need feedback
-        if (exitStateModel.getNextState().getStartDateTimePolling() == null) {
+        if (exitStateModel.getNextState().getPollingInfo().getStartDateTimePolling() == null ||) {
             if (exitStateModel.getNextState().getMaxTimePoolingMillis() == null) {
                 throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
             }
-            if (exitStateModel.getNextState().getMaxTimePoolingMillis() < Instant.now().toEpochMilli()) {
+            if (exitStateModel.getNextState().getPollingInfo().getMaxDateTimePolling().toEpochMilli() < Instant.now().toEpochMilli()) {
                 String code = "Sleep timeout";
                 String reason = "Max time pool limit reached";
                 return Intent.finish(new FinishIntent(FinishStatus.failure(errorMapping.mapFailure(code, reason))));
             }
             timerPollingDelay = OptionsExtractors.extractPollingDelay(exitStateModel.getEntryStateModel().getOptions(), timerProperties.getPollingDelay());
         } else {
-            ExponentialBackOffPollingService<AdapterState> pollingService = new ExponentialBackOffPollingService<>();
-            timerPollingDelay = pollingService.prepareNextPollingInterval(exitStateModel.getNextState(), exitStateModel.getEntryStateModel().getOptions());
+            ExponentialBackOffPollingService<PollingInfo> pollingService = new ExponentialBackOffPollingService<>();
+            timerPollingDelay = pollingService.prepareNextPollingInterval(
+                    exitStateModel.getNextState().getPollingInfo(),
+                    exitStateModel.getEntryStateModel().getOptions()
+            );
         }
         return WithdrawalsProviderAdapterPackageCreators.createIntentWithSleepIntent(timerPollingDelay);
     }

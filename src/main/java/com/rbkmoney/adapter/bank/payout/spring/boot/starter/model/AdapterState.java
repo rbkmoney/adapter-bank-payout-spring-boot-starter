@@ -12,7 +12,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdapterState extends PollingInfo {
+public class AdapterState {
 
     private Step step;
     // TODO: backward compatibility
@@ -21,4 +21,6 @@ public class AdapterState extends PollingInfo {
     private Instant maxDateTimePolling;
 
     private TransactionInfo trxInfo;
+
+    private PollingInfo pollingInfo;
 }
