@@ -45,7 +45,7 @@ public class IntentServiceImpl implements IntentService {
         int timerPollingDelay;
 
         // TODO: need feedback
-        if (exitStateModel.getNextState().getPollingInfo().getStartDateTimePolling() == null ||) {
+        if (exitStateModel.getNextState().getPollingInfo().getStartDateTimePolling() == null) {
             if (exitStateModel.getNextState().getMaxTimePoolingMillis() == null) {
                 throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
             }
