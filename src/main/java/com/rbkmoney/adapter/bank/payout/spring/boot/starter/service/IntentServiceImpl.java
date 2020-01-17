@@ -43,29 +43,36 @@ public class IntentServiceImpl implements IntentService {
 
     public Intent getSleep(ExitStateModel exitStateModel) {
         int timerPollingDelay;
+        Long maxTimePoolingMillis;
         if (exitStateModel.getNextState().getPollingInfo() == null) {
-            Long maxTimePoolingMillis = exitStateModel.getNextState().getMaxTimePoolingMillis();
+            // TODO: backward compatibility
+            maxTimePoolingMillis = exitStateModel.getNextState().getMaxTimePoolingMillis();
             if (maxTimePoolingMillis == null) {
                 throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
             }
-            if (maxTimePoolingMillis < Instant.now().toEpochMilli()) {
-                return prepareFailureIntent();
-            }
-            timerPollingDelay = OptionsExtractors.extractPollingDelay(
-                    exitStateModel.getEntryStateModel().getOptions(),
-                    timerProperties.getPollingDelay()
-            );
+            timerPollingDelay = computePollingInterval(exitStateModel, timerProperties);
         } else {
             Instant maxDateTimePolling = exitStateModel.getNextState().getPollingInfo().getMaxDateTimePolling();
             if (maxDateTimePolling == null) {
                 throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
             }
-            if (maxDateTimePolling.toEpochMilli() < Instant.now().toEpochMilli()) {
-                return prepareFailureIntent();
-            }
+            maxTimePoolingMillis = maxDateTimePolling.toEpochMilli();
             timerPollingDelay = computePollingInterval(exitStateModel);
         }
+
+        if (maxTimePoolingMillis < Instant.now().toEpochMilli()) {
+            return prepareFailureIntent();
+        }
         return WithdrawalsProviderAdapterPackageCreators.createIntentWithSleepIntent(timerPollingDelay);
+    }
+
+    private static int computePollingInterval(ExitStateModel exitStateModel, TimerProperties timerProperties) {
+        int timerPollingDelay;
+        timerPollingDelay = OptionsExtractors.extractPollingDelay(
+                exitStateModel.getEntryStateModel().getOptions(),
+                timerProperties.getPollingDelay()
+        );
+        return timerPollingDelay;
     }
 
     private Intent prepareFailureIntent() {
