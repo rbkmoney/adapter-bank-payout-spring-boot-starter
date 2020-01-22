@@ -44,22 +44,21 @@ public class IntentServiceImpl implements IntentService {
     public Intent getSleep(ExitStateModel exitStateModel) {
         int timerPollingDelay;
         Long maxTimePoolingMillis;
-        if (exitStateModel.getNextState().getPollingInfo() == null) {
+        if (exitStateModel.getNextState().getPollingInfo() != null) {
+            Instant maxDateTimePolling = exitStateModel.getNextState().getPollingInfo().getMaxDateTimePolling();
+            if (maxDateTimePolling == null) {
+                throw new IllegalArgumentException("Need to specify 'maxDateTimePolling' before sleep");
+            }
+            maxTimePoolingMillis = maxDateTimePolling.toEpochMilli();
+            timerPollingDelay = computePollingInterval(exitStateModel);
+        } else {
             // TODO: backward compatibility
             maxTimePoolingMillis = exitStateModel.getNextState().getMaxTimePoolingMillis();
             if (maxTimePoolingMillis == null) {
                 throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
             }
             timerPollingDelay = computePollingInterval(exitStateModel, timerProperties);
-        } else {
-            Instant maxDateTimePolling = exitStateModel.getNextState().getPollingInfo().getMaxDateTimePolling();
-            if (maxDateTimePolling == null) {
-                throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
-            }
-            maxTimePoolingMillis = maxDateTimePolling.toEpochMilli();
-            timerPollingDelay = computePollingInterval(exitStateModel);
         }
-
         if (maxTimePoolingMillis < Instant.now().toEpochMilli()) {
             return prepareFailureIntent();
         }
