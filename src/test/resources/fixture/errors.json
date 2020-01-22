@@ -1,0 +1,12 @@
+[
+  {
+    "codeRegex": "Sleep timeout",
+    "descriptionRegex": "Max time pool limit reached",
+    "mapping": "authorization_failed:operation_blocked"
+  },
+  {
+    "codeRegex": "unknown",
+    "descriptionRegex": "unknown",
+    "mapping": "ResultUnknown"
+  }
+]

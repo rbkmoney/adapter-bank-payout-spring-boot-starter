@@ -66,7 +66,7 @@ public class IntentServiceImpl implements IntentService {
         );
     }
 
-    public Long getMaxDateTimeInstant(EntryStateModel entryStateModel) {
+    public Long getMaxDateTimeInstantMillis(EntryStateModel entryStateModel) {
         int maxTimePolling = extractMaxTimePolling(entryStateModel.getOptions(), timerProperties.getMaxTimePolling());
         return Instant.now().plus(maxTimePolling, ChronoUnit.MINUTES).toEpochMilli();
     }

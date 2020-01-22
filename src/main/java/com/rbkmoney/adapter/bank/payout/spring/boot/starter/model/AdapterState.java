@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,8 +16,6 @@ public class AdapterState {
     private Step step;
     // TODO: backward compatibility
     private Long maxTimePoolingMillis;
-
-    private Instant maxDateTimePolling;
 
     private TransactionInfo trxInfo;
 

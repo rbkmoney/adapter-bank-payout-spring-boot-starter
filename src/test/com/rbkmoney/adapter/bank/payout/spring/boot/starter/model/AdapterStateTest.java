@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class AdapterStateTest {
 
     @Test
-    public void testUnwrapped() throws IOException {
+    public void testUnwrappedPollingInfo() throws IOException {
         ObjectMapper om = new SimpleObjectMapper().createSimpleObjectMapperFactory();
         AdapterState as = new AdapterState();
         as.setStep(Step.CHECK);
@@ -26,6 +26,19 @@ public class AdapterStateTest {
         assertEquals(as.getStep(), acRestored.getStep());
         assertNotNull(acRestored.getPollingInfo());
         assertEquals(as.getPollingInfo().getMaxDateTimePolling(), acRestored.getPollingInfo().getMaxDateTimePolling());
+    }
+
+    @Test
+    public void testUnwrappedPollingInfoIsNull() throws IOException {
+        ObjectMapper om = new SimpleObjectMapper().createSimpleObjectMapperFactory();
+        AdapterState as = new AdapterState();
+        as.setStep(Step.CHECK);
+        as.setPollingInfo(null);
+        String str = om.writeValueAsString(as);
+        assertTrue(str.startsWith("{\"step\":\"CHECK\""));
+        AdapterState acRestored = om.readValue(str, AdapterState.class);
+        assertEquals(as.getStep(), acRestored.getStep());
+        assertNotNull(acRestored.getPollingInfo());
     }
 
 }

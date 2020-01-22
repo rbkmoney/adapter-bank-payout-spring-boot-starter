@@ -15,7 +15,7 @@ public interface IntentService {
 
     Intent getSleep(ExitStateModel exitStateModel);
 
-    Long getMaxDateTimeInstant(EntryStateModel entryStateModel);
+    Long getMaxDateTimeInstantMillis(EntryStateModel entryStateModel);
 
     Instant extractMaxDateTimeInstant(EntryStateModel entryStateModel);
 }
