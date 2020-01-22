@@ -1,5 +1,6 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.model;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.rbkmoney.adapter.common.model.PollingInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +23,6 @@ public class AdapterState {
 
     private TransactionInfo trxInfo;
 
+    @JsonUnwrapped
     private PollingInfo pollingInfo;
 }
