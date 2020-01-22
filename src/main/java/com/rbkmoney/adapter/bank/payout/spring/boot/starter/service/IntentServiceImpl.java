@@ -12,7 +12,6 @@ import com.rbkmoney.damsel.withdrawals.provider_adapter.Intent;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Success;
 import com.rbkmoney.error.mapping.ErrorMapping;
 import com.rbkmoney.java.damsel.utils.creators.WithdrawalsProviderAdapterPackageCreators;
-import com.rbkmoney.java.damsel.utils.extractors.OptionsExtractors;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
@@ -42,36 +41,15 @@ public class IntentServiceImpl implements IntentService {
     }
 
     public Intent getSleep(ExitStateModel exitStateModel) {
-        int timerPollingDelay;
-        Long maxTimePoolingMillis;
-        if (exitStateModel.getNextState().getPollingInfo() != null) {
-            Instant maxDateTimePolling = exitStateModel.getNextState().getPollingInfo().getMaxDateTimePolling();
-            if (maxDateTimePolling == null) {
-                throw new IllegalArgumentException("Need to specify 'maxDateTimePolling' before sleep");
-            }
-            maxTimePoolingMillis = maxDateTimePolling.toEpochMilli();
-            timerPollingDelay = computePollingInterval(exitStateModel);
-        } else {
-            // TODO: backward compatibility
-            maxTimePoolingMillis = exitStateModel.getNextState().getMaxTimePoolingMillis();
-            if (maxTimePoolingMillis == null) {
-                throw new IllegalArgumentException("Need to specify 'maxTimePoolingMillis' before sleep");
-            }
-            timerPollingDelay = computePollingInterval(exitStateModel, timerProperties);
+        Instant maxDateTimePolling = exitStateModel.getNextState().getPollingInfo().getMaxDateTimePolling();
+        if (maxDateTimePolling == null) {
+            throw new IllegalArgumentException("Need to specify 'maxDateTimePolling' before sleep");
         }
-        if (maxTimePoolingMillis < Instant.now().toEpochMilli()) {
+        if (maxDateTimePolling.toEpochMilli() < Instant.now().toEpochMilli()) {
             return prepareFailureIntent();
         }
+        int timerPollingDelay = computePollingInterval(exitStateModel);
         return WithdrawalsProviderAdapterPackageCreators.createIntentWithSleepIntent(timerPollingDelay);
-    }
-
-    private static int computePollingInterval(ExitStateModel exitStateModel, TimerProperties timerProperties) {
-        int timerPollingDelay;
-        timerPollingDelay = OptionsExtractors.extractPollingDelay(
-                exitStateModel.getEntryStateModel().getOptions(),
-                timerProperties.getPollingDelay()
-        );
-        return timerPollingDelay;
     }
 
     private Intent prepareFailureIntent() {
@@ -81,13 +59,11 @@ public class IntentServiceImpl implements IntentService {
     }
 
     private int computePollingInterval(ExitStateModel exitStateModel) {
-        int timerPollingDelay;
         ExponentialBackOffPollingService<PollingInfo> pollingService = new ExponentialBackOffPollingService<>();
-        timerPollingDelay = pollingService.prepareNextPollingInterval(
+        return pollingService.prepareNextPollingInterval(
                 exitStateModel.getNextState().getPollingInfo(),
                 exitStateModel.getEntryStateModel().getOptions()
         );
-        return timerPollingDelay;
     }
 
     public Long getMaxDateTimeInstant(EntryStateModel entryStateModel) {
