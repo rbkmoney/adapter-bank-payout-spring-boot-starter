@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rbkmoney</groupId>
     <artifactId>adapter-bank-payout-spring-boot-starter</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <packaging>jar</packaging>
 
     <name>Adapter-bank-payout-spring-boot-starter</name>
@@ -15,10 +15,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>8</java.version>
         <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
-        <damsel.version>1.391-8fe5f98</damsel.version>
+        <damsel.version>1.392-0f6a308</damsel.version>
         <serializer.version>0.6.7</serializer.version>
         <error-mapping.version>1.0.4</error-mapping.version>
-        <adapter-common-lib.version>0.0.21</adapter-common-lib.version>
+        <adapter-common-lib.version>0.0.23</adapter-common-lib.version>
     </properties>
 
     <dependencies>
