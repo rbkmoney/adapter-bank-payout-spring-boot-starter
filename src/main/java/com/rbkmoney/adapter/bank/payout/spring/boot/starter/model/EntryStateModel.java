@@ -12,6 +12,7 @@ public class EntryStateModel {
     private String currencyCode;
     @ToString.Exclude
     private String pan;
+    @ToString.Exclude
     private Map<String, String> options;
 
     private AdapterState state;

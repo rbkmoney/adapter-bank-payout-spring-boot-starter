@@ -34,13 +34,16 @@ public class PayoutAdapterService<T extends EntryStateModel, X extends ExitState
     public ProcessResult processWithdrawal(Withdrawal withdrawal, Value state, Map<String, String> options) throws TException {
         validator.validate(withdrawal, state, options);
         T entryStateModel = withdrawalToEntryStateConverter.convert(withdrawal, state, options);
+        log.info("EntryStateModel: {}", entryStateModel);
         entryStateModel.getState().setStep(resolver.resolveEntry(entryStateModel));
         X exitStateModel = handlers.stream()
                 .filter(h -> h.isHandle(entryStateModel))
                 .findFirst()
                 .orElseThrow(UnsupportedMethodException::new)
                 .handle(entryStateModel);
+        log.info("ExitStateModel: {}", exitStateModel);
         exitStateModel.getNextState().setStep(resolver.resolveExit(exitStateModel));
+        log.info("Step changing: {} -> {}", entryStateModel.getState().getStep(), exitStateModel.getNextState().getStep());
         return exitStateToProcessResultConverter.convert(exitStateModel);
     }
 
