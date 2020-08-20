@@ -25,7 +25,7 @@ public class PayoutAdapterServiceLogDecorator implements AdapterSrv.Iface {
             log.info("processWithdrawal: finish {} with withdrawalId {}", processResult, withdrawalId);
             return processResult;
         } catch (Exception ex) {
-            String message = "Exception in processPayment with withdrawalId " + withdrawalId;
+            String message = "Exception in processWithdrawal with withdrawalId " + withdrawalId;
             logMessage(ex, message);
             throw ex;
         }
@@ -34,13 +34,28 @@ public class PayoutAdapterServiceLogDecorator implements AdapterSrv.Iface {
     @Override
     public Quote getQuote(GetQuoteParams getQuoteParams, Map<String, String> map) throws GetQuoteFailure, TException {
         String withdrawalId = getQuoteParams.getIdempotencyId();
-        log.info("processWithdrawal: start with withdrawalId {}", withdrawalId);
+        log.info("getQuote: start with withdrawalId {}", withdrawalId);
         try {
             Quote quote = payoutAdapterService.getQuote(getQuoteParams, map);
-            log.info("processWithdrawal: finish {} with withdrawalId {}", quote, withdrawalId);
+            log.info("getQuote: finish {} with withdrawalId {}", quote, withdrawalId);
             return quote;
         } catch (Exception ex) {
             String message = "Exception in getQuote with withdrawalId " + withdrawalId;
+            logMessage(ex, message);
+            throw ex;
+        }
+    }
+
+    @Override
+    public CallbackResult handleCallback(Callback callback, Withdrawal withdrawal, Value value, Map<String, String> map) throws TException {
+        String withdrawalId = withdrawal.getId();
+        log.info("handleCallback: start with withdrawalId {}", withdrawalId);
+        try {
+            CallbackResult callbackResult = payoutAdapterService.handleCallback(callback, withdrawal, value, map);
+            log.info("handleCallback: finish {} with withdrawalId {}", callbackResult, withdrawalId);
+            return callbackResult;
+        } catch (Exception ex) {
+            String message = "Exception in handleCallback with withdrawalId " + withdrawalId;
             logMessage(ex, message);
             throw ex;
         }

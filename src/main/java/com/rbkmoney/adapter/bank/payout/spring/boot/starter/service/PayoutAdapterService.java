@@ -1,11 +1,11 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.service;
 
-
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.converter.ExitStateToProcessResultConverter;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.converter.WithdrawalToEntryStateConverter;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.flow.StepResolver;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.handler.CommonHandler;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.handler.GetQuoteHandler;
+import com.rbkmoney.adapter.bank.payout.spring.boot.starter.handler.HandleCallbackHandler;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.EntryStateModel;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.ExitStateModel;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.validator.WithdrawalValidator;
@@ -29,6 +29,7 @@ public class PayoutAdapterService<T extends EntryStateModel, X extends ExitState
     private final StepResolver<T, X> resolver;
     private final WithdrawalValidator validator;
     private final GetQuoteHandler getQuoteHandler;
+    private final HandleCallbackHandler handleCallbackHandler;
 
     @Override
     public ProcessResult processWithdrawal(Withdrawal withdrawal, Value state, Map<String, String> options) throws TException {
@@ -50,5 +51,10 @@ public class PayoutAdapterService<T extends EntryStateModel, X extends ExitState
     @Override
     public Quote getQuote(GetQuoteParams getQuoteParams, Map<String, String> map) throws GetQuoteFailure, TException {
         return getQuoteHandler.handle(getQuoteParams, map);
+    }
+
+    @Override
+    public CallbackResult handleCallback(Callback callback, Withdrawal withdrawal, Value value, Map<String, String> map) throws TException {
+        return handleCallbackHandler.handleCallback(callback, withdrawal, value, map);
     }
 }
