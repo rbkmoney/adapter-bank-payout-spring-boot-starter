@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.AdapterState;
 import com.rbkmoney.adapter.common.state.deserializer.DeserializationException;
 import com.rbkmoney.adapter.common.state.deserializer.Deserializer;
+import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.IOException;
 
 @Getter
 @Setter

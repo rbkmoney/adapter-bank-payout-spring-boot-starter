@@ -1,14 +1,20 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.service;
 
+import static com.rbkmoney.java.damsel.utils.verification.ProxyProviderVerification.isUndefinedResultOrUnavailable;
+
 import com.rbkmoney.damsel.msgpack.Value;
-import com.rbkmoney.damsel.withdrawals.provider_adapter.*;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.AdapterSrv;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.Callback;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.CallbackResult;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.GetQuoteFailure;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.GetQuoteParams;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.ProcessResult;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.Quote;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.Withdrawal;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
-
-import java.util.Map;
-
-import static com.rbkmoney.java.damsel.utils.verification.ProxyProviderVerification.isUndefinedResultOrUnavailable;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,7 +23,8 @@ public class PayoutAdapterServiceLogDecorator implements AdapterSrv.Iface {
     private final AdapterSrv.Iface payoutAdapterService;
 
     @Override
-    public ProcessResult processWithdrawal(Withdrawal withdrawal, Value state, Map<String, String> options) throws TException {
+    public ProcessResult processWithdrawal(Withdrawal withdrawal, Value state, Map<String, String> options)
+            throws TException {
         String withdrawalId = withdrawal.getId();
         log.info("processWithdrawal: start with withdrawalId {}", withdrawalId);
         try {
@@ -47,7 +54,8 @@ public class PayoutAdapterServiceLogDecorator implements AdapterSrv.Iface {
     }
 
     @Override
-    public CallbackResult handleCallback(Callback callback, Withdrawal withdrawal, Value value, Map<String, String> map) throws TException {
+    public CallbackResult handleCallback(Callback callback, Withdrawal withdrawal, Value value, Map<String, String> map)
+            throws TException {
         String withdrawalId = withdrawal.getId();
         log.info("handleCallback: start with withdrawalId {}", withdrawalId);
         try {

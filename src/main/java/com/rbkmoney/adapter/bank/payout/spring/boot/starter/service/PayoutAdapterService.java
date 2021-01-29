@@ -11,13 +11,19 @@ import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.ExitStateModel
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.validator.WithdrawalValidator;
 import com.rbkmoney.adapter.common.exception.UnsupportedMethodException;
 import com.rbkmoney.damsel.msgpack.Value;
-import com.rbkmoney.damsel.withdrawals.provider_adapter.*;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.AdapterSrv;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.Callback;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.CallbackResult;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.GetQuoteFailure;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.GetQuoteParams;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.ProcessResult;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.Quote;
+import com.rbkmoney.damsel.withdrawals.provider_adapter.Withdrawal;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
-
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,7 +38,8 @@ public class PayoutAdapterService<T extends EntryStateModel, X extends ExitState
     private final HandleCallbackHandler handleCallbackHandler;
 
     @Override
-    public ProcessResult processWithdrawal(Withdrawal withdrawal, Value state, Map<String, String> options) throws TException {
+    public ProcessResult processWithdrawal(Withdrawal withdrawal, Value state, Map<String, String> options)
+            throws TException {
         validator.validate(withdrawal, state, options);
         T entryStateModel = withdrawalToEntryStateConverter.convert(withdrawal, state, options);
         log.info("EntryStateModel: {}", entryStateModel);
@@ -44,7 +51,8 @@ public class PayoutAdapterService<T extends EntryStateModel, X extends ExitState
                 .handle(entryStateModel);
         log.info("ExitStateModel: {}", exitStateModel);
         exitStateModel.getNextState().setStep(resolver.resolveExit(exitStateModel));
-        log.info("Step changing: {} -> {}", entryStateModel.getState().getStep(), exitStateModel.getNextState().getStep());
+        log.info("Step changing: {} -> {}", entryStateModel.getState().getStep(),
+                exitStateModel.getNextState().getStep());
         return exitStateToProcessResultConverter.convert(exitStateModel);
     }
 
@@ -54,7 +62,8 @@ public class PayoutAdapterService<T extends EntryStateModel, X extends ExitState
     }
 
     @Override
-    public CallbackResult handleCallback(Callback callback, Withdrawal withdrawal, Value value, Map<String, String> map) throws TException {
+    public CallbackResult handleCallback(Callback callback, Withdrawal withdrawal, Value value, Map<String, String> map)
+            throws TException {
         return handleCallbackHandler.handleCallback(callback, withdrawal, value, map);
     }
 }

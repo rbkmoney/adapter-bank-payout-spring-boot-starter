@@ -1,9 +1,8 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.model;
 
+import java.util.Map;
 import lombok.Data;
 import lombok.ToString;
-
-import java.util.Map;
 
 @Data
 public class EntryStateModel {

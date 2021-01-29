@@ -4,7 +4,6 @@ import com.rbkmoney.damsel.msgpack.Value;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Callback;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.CallbackResult;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Withdrawal;
-
 import java.util.Map;
 
 public interface HandleCallbackHandler {

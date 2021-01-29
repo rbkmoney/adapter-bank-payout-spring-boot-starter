@@ -5,17 +5,38 @@
 
     <parent>
         <groupId>com.rbkmoney</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0.5</version>
+        <artifactId>library-parent-pom</artifactId>
+        <version>1.0.1</version>
         <relativePath/>
     </parent>
 
     <artifactId>adapter-bank-payout-spring-boot-starter</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
     <packaging>jar</packaging>
 
     <name>Adapter-bank-payout-spring-boot-starter</name>
     <description>Spring boot starter for payout adapters</description>
+    <url>https://github.com/rbkmoney/adapter-bank-payout-spring-boot-starter</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <organization>RBK.money</organization>
+            <organizationUrl>https://rbk.money</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/rbkmoney/adapter-bank-payout-spring-boot-starter.git</connection>
+        <developerConnection>scm:git:ssh://github.com/rbkmoney/adapter-bank-payout-spring-boot-starter.git</developerConnection>
+        <url>https://github.com/rbkmoney/adapter-bank-payout-spring-boot-starter/tree/master</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,7 +49,7 @@
         <damsel.version>1.439-b18f037</damsel.version>
         <cds-proto.version>1.62-07f2b0f</cds-proto.version>
 
-        <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
+        <spring-boot.version>2.3.8.RELEASE</spring-boot.version>
         <woody.version>[1.1.21,)</woody.version>
         <geck.version>[0.6.11,)</geck.version>
         <lombok.version>1.18.4</lombok.version>
