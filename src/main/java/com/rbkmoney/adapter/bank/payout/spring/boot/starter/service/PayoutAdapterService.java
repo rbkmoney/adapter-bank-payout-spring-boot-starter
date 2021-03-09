@@ -19,11 +19,12 @@ import com.rbkmoney.damsel.withdrawals.provider_adapter.GetQuoteParams;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.ProcessResult;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Quote;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Withdrawal;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor

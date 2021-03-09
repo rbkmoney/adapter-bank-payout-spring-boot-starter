@@ -1,7 +1,5 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.service;
 
-import static com.rbkmoney.java.damsel.utils.verification.ProxyProviderVerification.isUndefinedResultOrUnavailable;
-
 import com.rbkmoney.damsel.msgpack.Value;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.AdapterSrv;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Callback;
@@ -11,10 +9,13 @@ import com.rbkmoney.damsel.withdrawals.provider_adapter.GetQuoteParams;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.ProcessResult;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Quote;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Withdrawal;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
+
+import java.util.Map;
+
+import static com.rbkmoney.java.damsel.utils.verification.ProxyProviderVerification.isUndefinedResultOrUnavailable;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -1,7 +1,5 @@
 package com.rbkmoney.adapter.bank.payout.spring.boot.starter.service;
 
-import static com.rbkmoney.java.damsel.utils.extractors.OptionsExtractors.extractMaxTimePolling;
-
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.properties.TimerProperties;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.EntryStateModel;
 import com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.ExitStateModel;
@@ -14,9 +12,12 @@ import com.rbkmoney.damsel.withdrawals.provider_adapter.Intent;
 import com.rbkmoney.damsel.withdrawals.provider_adapter.Success;
 import com.rbkmoney.error.mapping.ErrorMapping;
 import com.rbkmoney.java.damsel.utils.creators.WithdrawalsProviderAdapterPackageCreators;
+import lombok.RequiredArgsConstructor;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import lombok.RequiredArgsConstructor;
+
+import static com.rbkmoney.java.damsel.utils.extractors.OptionsExtractors.extractMaxTimePolling;
 
 @RequiredArgsConstructor
 public class IntentServiceImpl implements IntentService {
@@ -37,9 +38,11 @@ public class IntentServiceImpl implements IntentService {
     public Intent getSuccess(ExitStateModel exitStateModel) {
         com.rbkmoney.adapter.bank.payout.spring.boot.starter.model.TransactionInfo trxInfo =
                 exitStateModel.getNextState().getTrxInfo();
-        return Intent.finish(new FinishIntent(FinishStatus.success(new Success(new TransactionInfo()
+        Success success = new Success();
+        success.setTrxInfo(new TransactionInfo()
                 .setId(trxInfo.getTrxId())
-                .setExtra(trxInfo.getTrxExtra())))));
+                .setExtra(trxInfo.getTrxExtra()));
+        return Intent.finish(new FinishIntent(FinishStatus.success(success)));
     }
 
     public Intent getSleep(ExitStateModel exitStateModel) {

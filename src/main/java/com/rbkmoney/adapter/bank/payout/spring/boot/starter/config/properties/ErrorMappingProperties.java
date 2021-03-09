@@ -2,11 +2,12 @@ package com.rbkmoney.adapter.bank.payout.spring.boot.starter.config.properties;
 
 import com.rbkmoney.adapter.common.mapper.SimpleErrorMapping;
 import com.rbkmoney.error.mapping.ErrorMapping;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 
 
 @Configuration
